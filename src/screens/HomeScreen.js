@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   FlatList,
   ImageBackground,
   Text,
@@ -38,14 +37,6 @@ function HomeScreen() {
   const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
-  const notifySuccessfulPurchase = () => {
-    Alert.alert("Success", "Purchase successful", [
-      {
-        text: "Home",
-        onPress: () => navigation.navigate("Home"),
-      },
-    ]);
-  };
 
   const handlePurchase = async (productId) => {
     // setPurchaseLoading(true)
@@ -53,7 +44,7 @@ function HomeScreen() {
     try {
       await requestPurchase({ skus: [productId] });
     } catch (error) {
-      Alert.alert("Error occurred while making purchase");
+      
     } finally {
       setLoading(false);
     }
@@ -85,7 +76,7 @@ function HomeScreen() {
         setProducts(result);
         setLoading(false);
       } catch (error) {
-        Alert.alert("Error fetching products");
+        
       }
     };
     fetchProducts();
