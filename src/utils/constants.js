@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 const productSkus = Platform.select({
-  android: ['app_pro_plan2999'],
+  android: ['premium_plus_plan','premium_plan',],
 });
 export const constants = {
   productSkus,
