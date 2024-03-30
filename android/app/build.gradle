@@ -77,11 +77,11 @@ android {
 
     namespace "com.trymodels"
     defaultConfig {
-        applicationId "com.humananatomyapp"
+        applicationId "com.humananatomyapp3d"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.2"
+        versionCode 2
+        versionName "1.1"
         missingDimensionStrategy "store", "play"
     }
     signingConfigs {
