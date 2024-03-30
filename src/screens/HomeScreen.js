@@ -115,7 +115,7 @@ function HomeScreen() {
           }}
           resizeMode={FastImage.resizeMode.cover}
         >
-          <Text style={{ color: "white" }}>{item?.abc}</Text>
+          <Text style={{ color: "white" }}>{item?.label}</Text>
         </FastImage>
       </TouchableOpacity>
     );
