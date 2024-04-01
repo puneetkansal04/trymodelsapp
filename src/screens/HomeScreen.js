@@ -1,7 +1,7 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  ImageBackground,
   Text,
   TouchableOpacity,
   View,
@@ -10,6 +10,7 @@ import usePurchaseFetching from "../hooks/usePurchaseFetching";
 import {
   finishTransaction,
   getProducts,
+  initConnection,
   purchaseErrorListener,
   purchaseUpdatedListener,
   requestPurchase,
@@ -19,6 +20,7 @@ import { constants } from "../utils/constants";
 import useFirestoreCollection from "../hooks/useFirestoreCollection";
 import Orientation from "react-native-orientation-locker";
 import FastImage from "react-native-fast-image";
+import useInAppReview from "../hooks/useInAppReview";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -29,6 +31,8 @@ function HomeScreen() {
     return unsubscribe;
   }, [navigation]);
 
+  useInAppReview();
+  
   const [premiumUser, setPremiumUser] = useState([]);
   // Call the custom hook
   const loading = usePurchaseFetching(setPremiumUser);
@@ -37,20 +41,17 @@ function HomeScreen() {
   const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
-
   const handlePurchase = async (productId) => {
-    // setPurchaseLoading(true)
-    console.log("productId", productId);
     try {
       await requestPurchase({ skus: [productId] });
     } catch (error) {
-      
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    initConnection();
     const purchaseUpdateSubscription = purchaseUpdatedListener(
       async (purchase) => {
         const receipt = purchase.transactionReceipt;
@@ -63,7 +64,7 @@ function HomeScreen() {
               error
             );
           }
-          notifySuccessfulPurchase();
+          // notifySuccessfulPurchase();
         }
       }
     );
@@ -73,11 +74,10 @@ function HomeScreen() {
     const fetchProducts = async () => {
       try {
         const result = await getProducts({ skus: constants.productSkus });
+        console.log("result", result);
         setProducts(result);
         setLoading(false);
-      } catch (error) {
-        
-      }
+      } catch (error) { }
     };
     fetchProducts();
     return () => {
@@ -86,13 +86,15 @@ function HomeScreen() {
     };
   }, []);
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        key={index}
         onPress={() => {
-          if (premiumUser.includes(item?.plan)) {
+          if (!item?.plan || premiumUser?.includes(item?.plan)) {
             navigation.navigate("ViewModel", { dataItem: item });
           } else {
+            // handlePurchase(item?.plan);
             handlePurchase(constants.productSkus[0]);
           }
         }}
@@ -124,11 +126,11 @@ function HomeScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <FlatList
+        keyExtractor={(item, index) => item?.label}
         contentContainerStyle={{ flexGrow: 1 }}
         numColumns={2}
         data={collectionData?.data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.toString()}
       />
     </View>
   );

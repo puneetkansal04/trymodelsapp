@@ -13,7 +13,7 @@ const useFirestoreCollection = (collectionName) => {
           id: doc.id,
           ...doc.data(),
         }));
-        console.log("newData", newData);
+        // console.log("newData", newData);
         setData(newData);
         setLoading(false);
       });

@@ -13,6 +13,7 @@ const usePurchaseFetching = (setPremiumUser) => {
         try {
           // const result = await getAvailablePurchases();
           const result = await getPurchaseHistory();
+          console.log('result',result)
           setLoading(false);
           setPremiumUser(result.map((itemItem) => itemItem.productId));
         } catch (error) {
